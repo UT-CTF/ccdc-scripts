@@ -34,7 +34,7 @@ def change_passwords():
             for user in selected:
                 print(user[0])
             while invalid:
-                resp = input("Are you sure you want to change passwords for the above users? [Y/n]: ")
+                resp = input("Are you sure you want to change passwords for the above users? [Y/n/c]: ")
                 if resp.lower() == "y":
                     take_backup("/etc/shadow")
                     change_passwd_str = ""
@@ -51,6 +51,10 @@ def change_passwords():
                     return
                 elif resp.lower() == "n":
                     break
+                elif resp.lower() == "c":
+                    return
+        else:
+            break
 
 def dump_iptables():
     result = subprocess.run(["iptables-save"], capture_output=True, text=True)
@@ -158,6 +162,9 @@ def save_file(basename, data):
         file.write(data)
 
 def take_backup(path):
+    if not os.path.exists(path):
+        cp.print_error("'" + path + "' does not exist")
+        return
     basename = os.path.basename(path)
     helper_path = gen_path(basename)
     shutil.copyfile(path, helper_path)
@@ -173,15 +180,16 @@ if __name__ == "__main__":
             code.interact(local=locals())
     else:
         pass
-        # take_backup("/etc/passwd")
-        # take_backup("/etc/sudoers")
-        # dump_iptables()
-        # dump_crontab()
-        # dump_interfaces()
-        # dump_routes()
-        # dump_sessions()
-        # dump_ports()
-        # dump_authorized_keys()
-        # dump_processes()
-        # change_passwords()
+        take_backup("/etc/passwd")
+        take_backup("/etc/sudoers")
+        take_backup("/etc/resolv.conf")
+        dump_iptables()
+        dump_crontab()
+        dump_interfaces()
+        dump_routes()
+        dump_sessions()
+        dump_ports()
+        dump_authorized_keys()
+        dump_processes()
+        change_passwords()
         # configure_bash()

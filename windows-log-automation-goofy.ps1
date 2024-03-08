@@ -13,10 +13,11 @@
 
 #         }
 # }
-$url = "https://dl.nxlog.co/dl/65ea5ac19f191" 
-$path_to_file = "C:\Windows\Temp\nxlog-ce.msi"
-$Client = New-Object System.Net.WebClient
-$Client.DownloadFile($url, $path_to_file)
+# $url = "https://dl.nxlog.co/dl/65ea5ac19f191" 
+# $path_to_file = "C:\Windows\Temp\nxlog-ce.msi"
+# $Client = New-Object System.Net.WebClient
+# $Client.DownloadFile($url, $path_to_file)
 
 
+wget https://dl.nxlog.co/dl/65ea5ac19f191
 

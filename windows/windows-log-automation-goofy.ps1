@@ -1,23 +1,37 @@
-# $InstallerCheck = (Get-Service | Where-Object { $_.Name -eq 'nxlog' }).DisplayName
+$file_name = "nxlog-ce-3.2.2329.msi"
+$base_url = "https://github.com/UT-CTF/ccdc-scripts/raw/main/windows/"
+$base_path = "C:\hash"
+$logging_server_ip = "10.10.0.156"
 
-# if ( $InstallerCheck -ne "nxlog" ) {
+$log_config = @"
+<Extension _gelf>
+    Module      xm_gelf
+</Extension>
 
-#     $InstallerPresenceCheck = (Get-Childitem "C:\Windows\Temp"| where {$_.name -eq "nxlog-ce.msi"}).Name
-#     if ($InstallerPresenceCheck -ne "nxlog-ce.msi"){
-#         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-#         $url = "https://dl.nxlog.co/dl/65ea5ac19f191" 
-#         $path_to_file = "C:\Windows\Temp\nxlog-ce.msi"
-#         $Client = New-Object System.Net.WebClient
-#         $Client.DownloadFile($url, $path_to_file)
+# Snare compatible example configuration
+# Collecting event log
+ <Input in>
+     Module      im_msvistalog
+ </Input>
+ 
+# Sends Eevent in GELF format to Graylog
+ <Output out>
+     Module      om_udp
+     Host        $logging_server_ip
+     Port        12201
+     OutputType  GELF
+ </Output>
+# 
+# Connect input 'in' to output 'out'
+ <Route 1>
+     Path        in => out
+ </Route>
+"@
+$file_url = $base_url + $file_name
+$file_path = $base_path + "\" + $file_name
 
-
-#         }
-# }
-# $url = "https://dl.nxlog.co/dl/65ea5ac19f191" 
-# $path_to_file = "C:\Windows\Temp\nxlog-ce.msi"
-# $Client = New-Object System.Net.WebClient
-# $Client.DownloadFile($url, $path_to_file)
-
-
-wget https://dl.nxlog.co/dl/65ea5ac19f191
-
+New-Item -Path $base_path -ItemType Directory -Force
+Invoke-WebRequest -UseBasicParsing -OutFile $file_path -Uri $file_url
+Start-Process msiexec "/i $file_path /qn" -Wait
+New-Item -Path "C:\Program Files\nxlog\conf\nxlog.d\hash.conf" -ItemType File -Value $log_config -Force
+Restart-Service -Name nxlog

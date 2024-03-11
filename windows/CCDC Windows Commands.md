@@ -1,3 +1,9 @@
+# Bypass Execution policy
+
+```powershell
+PowerShell.exe -ExecutionPolicy Bypass -File .\YOUR_SCRIPT.ps1
+```
+
 # AD & Local Management
 ## Managing passwords
 ### Local users

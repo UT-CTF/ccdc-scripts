@@ -155,7 +155,7 @@ def configure_logging():
     if os.path.exists("/etc/syslog.conf"):
         take_backup("/etc/syslog.conf")
         with open("/etc/syslog.conf", "a") as file:
-            file.write("*.* @{LOGGING_IP}")
+            file.write(f"*.* @{LOGGING_IP}")
     if os.path.exists("/etc/environment"):
         take_backup("/etc/environment")
         with open("/etc/environment", "a") as file:

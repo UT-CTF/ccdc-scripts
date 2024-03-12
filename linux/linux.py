@@ -11,6 +11,7 @@ from colorprint import ColorPrint as cp
 from pick import pick
 from pstree import list_processes
 
+LOGGING_IP = "10.10.0.15"
 HELPER = "helper"
 HISTORY = "/dev/shm/"
 
@@ -150,11 +151,11 @@ def configure_logging():
     if os.path.exists("/etc/rsyslog.conf"):
         take_backup("/etc/rsyslog.conf")
         with open("/etc/rsyslog.conf", "a") as file:
-            file.write("*.* @$LOG_SERVER")
+            file.write(f"*.* @{LOGGING_IP}")
     if os.path.exists("/etc/syslog.conf"):
         take_backup("/etc/syslog.conf")
         with open("/etc/syslog.conf", "a") as file:
-            file.write("*.* @$LOG_SERVER")
+            file.write("*.* @{LOGGING_IP}")
     if os.path.exists("/etc/environment"):
         take_backup("/etc/environment")
         with open("/etc/environment", "a") as file:

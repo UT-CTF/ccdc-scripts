@@ -146,6 +146,20 @@ def configure_bash():
 
         cp.print_pass("bash configured. reload shell for changes to take effect.")
 
+def configure_logging():
+    if os.path.exists("/etc/rsyslog.conf"):
+        take_backup("/etc/rsyslog.conf")
+        with open("/etc/rsyslog.conf", "a") as file:
+            file.write("*.* @$LOG_SERVER")
+    if os.path.exists("/etc/syslog.conf"):
+        take_backup("/etc/syslog.conf")
+        with open("/etc/syslog.conf", "a") as file:
+            file.write("*.* @$LOG_SERVER")
+    if os.path.exists("/etc/environment"):
+        take_backup("/etc/environment")
+        with open("/etc/environment", "a") as file:
+            file.write('PROMPT_COMMAND=\'RETRN_VAL=$?;logger -p local6.debug "exec_command $(whoami) [$$]: $(history 1 | sed "s/^[ ]*[0-9]\+[ ]*//" )"\'')
+
 def gen_path(basename):
     for root, dirs, files in os.walk(HELPER):
         bkup_num = 0
@@ -192,4 +206,5 @@ if __name__ == "__main__":
         dump_authorized_keys()
         dump_processes()
         change_passwords()
-        # configure_bash()
+        configure_bash()
+        configure_logging()

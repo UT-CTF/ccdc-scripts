@@ -2,15 +2,12 @@
 *Made this into a markdown from a 3-piece script.*
 [Wiki](https://github.com/fail2ban/fail2ban/wiki)
 
-### TODO
-Write jail.local (to overwrite jail.conf in /etc/fail2ban/), with config (like timeouts and number of tries) and enabled=true for ssh and commented enabled=true for everything else
-
 Steps:
   1. Install fail2ban (below)
   2. Add fail2ban.local to /etc/fail2ban/
-  3. Add any desired modules (below) to ssh.local
-  4. Add ssh.local to /etc/fail2ban/jail.d/
-  5. Enable fail2ban (below)
+  3. Enable any important modules (listed below) in jail.local by adding `enabled = true` below [<module_name>]
+  4. Add jail.local to /etc/fail2ban/
+  5. Enable and start fail2ban (below)
 
 ## Installing (from Package Manager)
 ```

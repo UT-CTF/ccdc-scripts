@@ -2,6 +2,12 @@
 *Made this into a markdown from a 3-piece script.*
 [Wiki](https://github.com/fail2ban/fail2ban/wiki)
 
+Steps:
+  1. Install fail2ban (below)
+  2. Add fail2ban.local to /etc/fail2ban/
+  3. Add ssh.local to /etc/fail2ban/jail.d/
+  4. Enable fail2ban (below)
+
 ## Installing (from Package Manager)
 ```
 apt-get update

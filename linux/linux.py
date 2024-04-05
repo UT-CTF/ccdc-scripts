@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Run script with "python linux.py config" on initial use to make basic changes, "python linux.py" to only make backups. R
+
 import base64
 import code
 import os
@@ -197,11 +199,15 @@ def setup():
     if not os.path.exists(HELPER):
         os.mkdir(HELPER)
 
+make_changes = false
+
 if __name__ == "__main__":
     setup()
     if len(sys.argv) >= 2:
         if sys.argv[1] == "sh":
             code.interact(local=locals())
+        if sys.argv[1] == "config":
+            make_changes = true
     else:
         pass
         take_backup("/etc/passwd")
@@ -215,6 +221,7 @@ if __name__ == "__main__":
         dump_ports()
         dump_processes()
         dump_authorized_keys()
-        change_passwords()
-        configure_bash()
-        configure_logging()
+        if (make_changes):
+            change_passwords()
+            configure_bash()
+            configure_logging()

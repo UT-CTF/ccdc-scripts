@@ -9,7 +9,6 @@ import subprocess
 import sys
 from colorprint import ColorPrint as cp
 from pick import pick
-from pstree import list_processes
 
 LOGGING_IP = "10.10.0.15"
 HELPER = "helper"
@@ -23,6 +22,13 @@ def list_users():
     for user in pwd.getpwall():
         users.append((user[0], grp.getgrgid(user[3])[0]))
     return users
+
+def list_processes():
+        processes = ""
+        process = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE) 
+        out, err = process.communicate()
+        return out.decode('utf-8')
+                 
 
 def change_passwords():
     users = list_users()
@@ -128,7 +134,8 @@ def dump_authorized_keys():
         save_file("authorized_keys", authorized_keys_result[:-2])
 
 def dump_processes():
-    save_file("processes", list_processes())
+        save_file("processes", list_processes())
+
 
 def configure_bash():
     if not os.path.exists(HISTORY):
@@ -204,8 +211,8 @@ if __name__ == "__main__":
         dump_routes()
         dump_sessions()
         dump_ports()
-        dump_authorized_keys()
         dump_processes()
+        dump_authorized_keys()
         change_passwords()
         configure_bash()
         configure_logging()

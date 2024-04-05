@@ -8,6 +8,7 @@ Steps per machine:
   3. Enable any important modules (listed below) by adding `enabled = true` below [<module_name>] in jail.local 
   4. Add jail.local to /etc/fail2ban/
   5. Enable and start fail2ban (below)
+  6. Check to make sure it's working with `sudo fail2ban-client status` to see running modules and checking logs in /var/log/fail2ban.log
 
 ## Installing (from Package Manager)
 ```

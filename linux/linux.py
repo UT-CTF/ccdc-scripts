@@ -51,6 +51,8 @@ def change_passwords():
                         stdout, stderr = proc.communicate(input=user[0] + ":" + password)
                         if proc.returncode == 0:
                             change_passwd_str += user[0] + "," + password + "\n"
+                            if (user[0] == "root"):
+                                cp.print_pass("changed root password to " + password)  
                         else:
                             cp.print_error(stderr.decode())
                             cp.print_error("could not change password for [" + user[0] + "]")

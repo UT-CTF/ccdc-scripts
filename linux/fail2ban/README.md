@@ -5,8 +5,9 @@
 Steps:
   1. Install fail2ban (below)
   2. Add fail2ban.local to /etc/fail2ban/
-  3. Add ssh.local to /etc/fail2ban/jail.d/
-  4. Enable fail2ban (below)
+  3. Add any desired modules (below) to ssh.local
+  4. Add ssh.local to /etc/fail2ban/jail.d/
+  5. Enable fail2ban (below)
 
 ## Installing (from Package Manager)
 ```

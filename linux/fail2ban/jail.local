@@ -6,11 +6,6 @@
 #           file, but provide customizations in jail.local file,
 #           or separate .conf files under jail.d/ directory, e.g.:
 #
-# HOW TO ACTIVATE JAILS:
-#
-# YOU SHOULD NOT MODIFY THIS FILE.
-#
-# It will probably be overwritten or improved in a distribution update.
 #
 # Provide customizations in a jail.local file or a jail.d/customisation.local.
 # For example to change the default bantime for all jails and to enable the
@@ -46,7 +41,9 @@ before = paths-debian.conf
 
 # "bantime.increment" allows to use database for searching of previously banned ip's to increase a 
 # default ban time using special formula, default it is banTime * 1, 2, 4, 8, 16, 32...
-#bantime.increment = true
+
+# Changed for CCDC
+bantime.increment = false
 
 # "bantime.rndtime" is the max number of seconds using for mixing with random time 
 # to prevent "clever" botnets calculate exact time IP can be unbanned again:
@@ -78,7 +75,9 @@ before = paths-debian.conf
 
 # "bantime.overalljails" (if true) specifies the search of IP in the database will be executed 
 # cross over all jails, if false (default), only current jail of the ban IP will be searched
-#bantime.overalljails = false
+
+# Changed for CCDC
+bantime.overalljails = true
 
 # --------------------
 
@@ -99,7 +98,7 @@ ignorecommand =
 
 # "bantime" is the amount of time that a host is banned, integer in seconds or
 # time abbreviation format (m - minutes, h - hours, d - days, w - weeks, mo - months, y - years).
-# This is to consider as an initial time if bantime.increment gets enabled.
+# This is to consider as an initial time if ment gets enabled.
 bantime  = 10m
 
 # A host is banned if it has generated "maxretry" during the last "findtime"
@@ -140,7 +139,9 @@ backend = auto
 # no:    if a hostname is encountered, will not be used for banning,
 #        but it will be logged as info.
 # raw:   use raw value (no hostname), allow use it for no-host filters/actions (example user)
-usedns = warn
+
+# Changed for CCDC
+usedns = no
 
 # "logencoding" specifies the encoding of the log files handled by the jail
 #   This is used to decode the lines from the log file.
@@ -282,7 +283,7 @@ logpath = %(sshd_log)s
 backend = %(sshd_backend)s
 
 # Non-default, added for CCDC
-enabled = true 
+enabled = true
 
 
 [dropbear]

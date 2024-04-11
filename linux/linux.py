@@ -26,10 +26,10 @@ def list_users():
     return users
 
 def list_processes():
-        processes = ""
-        process = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE) 
-        out, err = process.communicate()
-        return out.decode('utf-8')
+    processes = ""
+    process = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE) 
+    out, err = process.communicate()
+    return out.decode('utf-8')
                  
 
 def change_passwords():
@@ -138,8 +138,7 @@ def dump_authorized_keys():
         save_file("authorized_keys", authorized_keys_result[:-2])
 
 def dump_processes():
-        save_file("processes", list_processes())
-
+    save_file("processes", list_processes())
 
 def configure_bash():
     if not os.path.exists(HISTORY):
@@ -159,6 +158,8 @@ def configure_bash():
         cp.print_pass("bash configured. reload shell for changes to take effect.")
 
 def configure_logging():
+    LOGGING_IP = input("Enter the IP of the logging server:")
+    cp.print_pass(f"Setting logging to go to {LOGGING_IP}")
     if os.path.exists("/etc/rsyslog.conf"):
         take_backup("/etc/rsyslog.conf")
         with open("/etc/rsyslog.conf", "a") as file:
@@ -171,7 +172,7 @@ def configure_logging():
         take_backup("/etc/environment")
         with open("/etc/environment", "a") as file:
             file.write('PROMPT_COMMAND=\'RETRN_VAL=$?;logger -p local6.debug "exec_command $(whoami) [$$]: $(history 1 | sed "s/^[ ]*[0-9]\+[ ]*//" )"\'')
-
+"""
 def gen_path(basename):
     for root, dirs, files in os.walk(HELPER):
         bkup_num = 0
@@ -181,9 +182,24 @@ def gen_path(basename):
                 bkup_num = max(bkup_num, int(file[file_hyphen_idx+1:]))
         bkup_num += 1
     return os.path.join(HELPER, basename + "-" + str(bkup_num))
+"""
 
 def save_file(basename, data):
-    helper_path = gen_path(basename)
+    bkup_num = 0
+    for root, dirs, files in os.walk(HELPER):
+        bkup_num = 0
+        for file in files:
+            file_hyphen_idx = file.rindex("-")
+            if file[:file_hyphen_idx] == basename:
+                bkup_num = max(bkup_num, int(file[file_hyphen_idx+1:]))
+        bkup_num += 1
+    helper_path = os.path.join(HELPER, basename + "-" + str(bkup_num))
+    if bkup_num > 1:
+        prev_path = os.path.join(HELPER, basename + "-" + str(bkup_num - 1))
+        res = subprocess.run(["diff", "-s", helper_path, prev_path], capture_output=True, text=True)
+        cp.print_pass(res.stdout)
+        #with open(helper_path, "w") as diff_file:
+        #    diff_file.write(res.stdout)
     with open(helper_path, "w") as file:
         file.write(data)
 
@@ -192,14 +208,28 @@ def take_backup(path):
         cp.print_error("'" + path + "' does not exist")
         return
     basename = os.path.basename(path)
-    helper_path = gen_path(basename)
+    bkup_num = 0
+    for root, dirs, files in os.walk(HELPER):
+        bkup_num = 0
+        for file in files:
+            file_hyphen_idx = file.rindex("-")
+            if file[:file_hyphen_idx] == basename:
+                bkup_num = max(bkup_num, int(file[file_hyphen_idx+1:]))
+        bkup_num += 1
+    helper_path = os.path.join(HELPER, basename + "-" + str(bkup_num))
+    if bkup_num > 1:
+        prev_path = os.path.join(HELPER, basename + "-" + str(bkup_num - 1))
+        res = subprocess.run(["diff", "-s", helper_path, prev_path], capture_output=True, text=True)
+        cp.print_pass(res.stdout)
+        #with open(helper_path, "w") as diff_file:
+        #    diff_file.write(res.stdout)
     shutil.copyfile(path, helper_path)
 
 def setup():
     if not os.path.exists(HELPER):
         os.mkdir(HELPER)
 
-make_changes = false
+make_changes = False
 
 if __name__ == "__main__":
     setup()
@@ -207,7 +237,7 @@ if __name__ == "__main__":
         if sys.argv[1] == "sh":
             code.interact(local=locals())
         if sys.argv[1] == "config":
-            make_changes = true
+            make_changes = True
     else:
         pass
         take_backup("/etc/passwd")
@@ -225,3 +255,4 @@ if __name__ == "__main__":
             change_passwords()
             configure_bash()
             configure_logging()
+        

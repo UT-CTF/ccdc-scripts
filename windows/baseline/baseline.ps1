@@ -1,8 +1,4 @@
-# Import-Module .\iis.ps1
-# Import-Module .\ad.ps1
-
-
-function Get-BackupPath {
+Function Get-BackupPath {
     Add-Type -Assembly System.Windows.Forms
     $browser = New-Object System.Windows.Forms.FolderBrowserDialog
     $res = $browser.ShowDialog()
@@ -58,9 +54,3 @@ Write-Host "`n------------------------------------`n"
 Write-Host "Exporting generic baseline data..."
 . .\generic.ps1
 Export-GenericBaseline -BackupPath $BackupPath
-
-# Backup-IISData -BackupPath $BackupPath
-# New-ADSnapshot
-
-
-

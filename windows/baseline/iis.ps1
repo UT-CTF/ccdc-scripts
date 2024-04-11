@@ -3,7 +3,7 @@ function Backup-IISData {
         [Parameter(Mandatory=$true)]
         [string]$BackupPath
     )
-    $datestr = Get-Date -Format dd-hh-mm
+    $datestr = Get-Date -Format dd-HH-mm
     $null = Backup-WebConfiguration -Name "IIS $datestr"
     $iisdir = New-Item -ItemType Directory -Path $BackupPath -Name "IIS $datestr"
     $sites = Get-IISSite

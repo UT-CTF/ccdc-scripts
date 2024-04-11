@@ -33,7 +33,7 @@ Function Export-GenericBaseline {
         [string]$BackupPath
     )
 
-    $datestr = Get-Date -Format dd-hh-mm
+    $datestr = Get-Date -Format dd-HH-mm
     $datapath = New-Item -ItemType Directory -Path $BackupPath -Name "Generic $datestr"
     $netstat = netstat -abno
     $netstat | Out-File "$($datapath.FullName)\netstat.txt"

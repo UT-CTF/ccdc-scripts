@@ -357,12 +357,17 @@ Function Export-ADData {
         [parameter(Mandatory = $true)]
         [string]$BackupPath
     )
-    $datestr = Get-Date -Format dd-hh-mm
+    $datestr = Get-Date -Format dd-HH-mm
     $addir = New-Item -ItemType Directory -Path $BackupPath -Name "AD $datestr"
+
     $users = Get-ADUser -Filter * -Properties *
     $users | Out-File "$($addir.FullName)\users.txt"
+
     $groups = Get-ADGroup -Filter * -Properties *
     $groups | Out-File "$($addir.FullName)\groups.txt"
+
+    $computers = Get-ADComputer -Filter * -Properties *
+    $computers | Out-File "$($addir.FullName)\computers.txt"
 }
 
 # Dismount-ADDatabase

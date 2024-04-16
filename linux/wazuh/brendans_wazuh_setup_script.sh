@@ -84,3 +84,6 @@ docker exec single-node-wazuh.indexer-1 /bin/bash -c "
         export JAVA_HOME=/usr/share/wazuh-indexer/jdk;
         chmod u+x /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh;
         /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh -cd /usr/share/wazuh-indexer/opensearch-security/ -nhnv -cacert /usr/share/wazuh-indexer/certs/root-ca.pem -cert /usr/share/wazuh-indexer/certs/admin.pem -key /usr/share/wazuh-indexer/certs/admin-key.pem -p 9200 -icl"
+
+docker compose down
+docker compose up -d

@@ -79,7 +79,7 @@ docker compose up -d
 
 sleep 30
 
-docker exec single-node-wazuh.manager-1 /bin/bash -c "sed -i \"s/ enabled: false/enabled: true/\" /etc/filebeat/filebeat.yml"
+docker exec single-node-wazuh.manager-1 /bin/bash -c "sed -i \"s/ enabled: false/ enabled: true/\" /etc/filebeat/filebeat.yml"
 docker exec single-node-wazuh.indexer-1 /bin/bash -c "
         export JAVA_HOME=/usr/share/wazuh-indexer/jdk;
         chmod u+x /usr/share/wazuh-indexer/plugins/opensearch-security/tools/securityadmin.sh;

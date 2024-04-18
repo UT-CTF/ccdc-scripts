@@ -26,28 +26,44 @@ gather_network_info() {
     echo "=== Network Configuration ===" > "$baseline_dir/$next_dir/network_info.txt"
     ip a >> "$baseline_dir/$next_dir/network_info.txt"
     echo >> "$baseline_dir/$next_dir/network_info.txt"
-    echo "=== Routes ===">> "$baseline_dir/$next_dir/network_info.txt"
+    echo "=== Routes ===" >> "$baseline_dir/$next_dir/network_info.txt"
     ip route show all >> "$baseline_dir/$next_dir/network_info.txt"
     echo >> "$baseline_dir/$next_dir/network_info.txt"
-    echo "=== Netstat ===">> "$baseline_dir/$next_dir/network_info.txt"
+    echo "=== Netstat ===" >> "$baseline_dir/$next_dir/network_info.txt"
     netstat -tuln >> "$baseline_dir/$next_dir/network_info.txt"
     echo >> "$baseline_dir/$next_dir/network_info.txt"
-    echo "=== IpTables ===">> "$baseline_dir/$next_dir/network_info.txt"
+    echo "=== IpTables ===" >> "$baseline_dir/$next_dir/network_info.txt"
     iptables-save >> "$baseline_dir/$next_dir/network_info.txt"
     echo >> "$baseline_dir/$next_dir/network_info.txt"
     ip6tables-save >> "$baseline_dir/$next_dir/network_info.txt"
     echo >> "$baseline_dir/$next_dir/network_info.txt"
-    echo "=== Sessions ===">> "$baseline_dir/$next_dir/network_info.txt"
+    echo "=== Sessions ===" >> "$baseline_dir/$next_dir/network_info.txt"
     w >> "$baseline_dir/$next_dir/network_info.txt"
     echo >> "$baseline_dir/$next_dir/network_info.txt"
-    echo "=== Ports ===">> "$baseline_dir/$next_dir/network_info.txt"
+    echo "=== Ports ===" >> "$baseline_dir/$next_dir/network_info.txt"
     ss -nltup >> "$baseline_dir/$next_dir/network_info.txt"
+    echo "=== resolv.conf ===" >> "$baseline_dir/$next_dir/network_info.txt"
+    cat "/etc/resolv.conf" >> "$baseline_dir/$next_dir/network_info.txt"
 }
 
 # Function to gather user information
 gather_user_info() {
     echo "=== User Information ===" > "$baseline_dir/$next_dir/user_info.txt"
     cat /etc/passwd >> "$baseline_dir/$next_dir/user_info.txt"
+    echo >> "$baseline_dir/$next_dir/user_info.txt"
+    echo "=== Sudoers ===" >> "$baseline_dir/$next_dir/user_info.txt"
+    cat /etc/sudoers >> "$baseline_dir/$next_dir/user_info.txt"
+    echo >> "$baseline_dir/$next_dir/user_info.txt"
+    echo "=== Authorized Keys ===" >> "$baseline_dir/$next_dir/user_info.txt"
+    all_users=$(getent passwd | cut -d: -f1)
+    for user in $all_users; do
+        local authorized_keys_file="~$user/.ssh/authorized_keys"
+        if [ -f "$authorized_keys_file" ]; then
+            echo "=== Authorized keys for user: $user ===" >> "$baseline_dir/$next_dir/user_info.txt"
+            cat "$authorized_keys_file" >> "$baseline_dir/$next_dir/user_info.txt"
+            echo >> "$baseline_dir/$next_dir/user_info.txt"
+        fi
+    done
 }
 
 # Function to gather installed packages information

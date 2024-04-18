@@ -357,23 +357,17 @@ Function Export-ADData {
         [parameter(Mandatory = $true)]
         [string]$BackupPath
     )
-    $addir = New-Item -ItemType Directory -Path $BackupPath -Name "AD"
+    $datestr = Get-Date -Format dd-HH-mm
+    $addir = New-Item -ItemType Directory -Path $BackupPath -Name "AD $datestr"
 
-    Write-Host "Exporting users..."
     $users = Get-ADUser -Filter * -Properties *
     $users | Out-File "$($addir.FullName)\users.txt"
 
-    Write-Host "Exporting groups..."
     $groups = Get-ADGroup -Filter * -Properties *
     $groups | Out-File "$($addir.FullName)\groups.txt"
 
-    Write-Host "Exporting computers..."
     $computers = Get-ADComputer -Filter * -Properties *
     $computers | Out-File "$($addir.FullName)\computers.txt"
-
-    Write-Host "Exporting GPOs..."
-    $gpodir = New-Item -ItemType Directory -Path "$($addir.FullName)\GPOs"
-    $null = Backup-GPO -All -Path $gpodir.FullName
 }
 
 # Dismount-ADDatabase

@@ -3,10 +3,9 @@ function Backup-IISData {
         [Parameter(Mandatory=$true)]
         [string]$BackupPath
     )
-    $datestr = Get-Date -Format dd-HH-mm-ss
-    $backupname = "IIS Config $datestr"
-    $null = Backup-WebConfiguration -Name $backupname
-    $iisdir = New-Item -ItemType Directory -Path $BackupPath -Name "IIS"
+    $datestr = Get-Date -Format dd-HH-mm
+    $null = Backup-WebConfiguration -Name "IIS $datestr"
+    $iisdir = New-Item -ItemType Directory -Path $BackupPath -Name "IIS $datestr"
     $sites = Get-IISSite
     ForEach ($site in $sites) {
         $webpath = "IIS:\Sites\$($site.Name)"
@@ -14,7 +13,6 @@ function Backup-IISData {
         $destpath = "$($iisdir.FullName)\$($site.Name)"
         Compress-Archive -Path $datapath -DestinationPath $destpath -Compression Fastest
     }
-    $backupname | Out-File "$($iisdir.FullName)\configname.txt"
 }
 
 function Restore-IISData {
@@ -25,7 +23,7 @@ function Restore-IISData {
         [string]$BackupPath
     )
     Restore-WebConfiguration -Name "IIS $Date"
-    $iisdir = Get-Item -Path "$BackkupPath\IIS $Date"
+    $iisdir = Get-Item -Path "$BackupPath\IIS $Date"
     $sites = Get-IISSite
     ForEach ($site in $sites) {
         $webpath = "IIS:\Sites\$($site.Name)"

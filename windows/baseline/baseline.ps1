@@ -1,23 +1,25 @@
-Function Get-BackupPath {
-    Add-Type -Assembly System.Windows.Forms
-    $browser = New-Object System.Windows.Forms.FolderBrowserDialog
-    $res = $browser.ShowDialog()
-    if ($res -ne "OK") {
-        return $null
-    }
-    $filepath = $browser.SelectedPath
-    return $filepath
-}
+# Function Get-BackupPath {
+#     Add-Type -Assembly System.Windows.Forms
+#     $browser = New-Object System.Windows.Forms.FolderBrowserDialog
+#     $res = $browser.ShowDialog()
+#     if ($res -ne "OK") {
+#         return $null
+#     }
+#     $filepath = $browser.SelectedPath
+#     return $filepath
+# }
 
 
-$BackupPath = Get-BackupPath
-if ($null -eq $BackupPath) {
-    Write-Host "No backup path selected"
-    return
-}
+# $BackupPath = Get-BackupPath
+# if ($null -eq $BackupPath) {
+#     Write-Host "No backup path selected"
+#     return
+# }
 
-# $BackupPath = "C:\Users\ameya\Documents\School\HASH\windows\baseline\Backups"
+$BackupPath = "C:\Users\ameya\Documents\School\HASH\artifacts\Backups"
 
+$DateStr = Get-Date -Format dd-HH-mm
+$NewBackup = New-Item -ItemType Directory -Path $BackupPath -Name "Backup $DateStr"
 
 # check if IIS installed
 Write-Host "Checking for IIS..."
@@ -26,7 +28,7 @@ try {
     Write-Host "IIS installed"
     Write-Host "Backing up IIS data..."
     . .\iis.ps1
-    Backup-IISData -BackupPath $BackupPath
+    Backup-IISData -BackupPath $NewBackup.FullName
 }
 catch {
     Write-Host "IIS not installed"
@@ -43,7 +45,7 @@ try {
     . .\ad.ps1
     New-ADSnapshot
     Write-Host "Exporting AD data..."
-    Export-ADData -BackupPath $BackupPath
+    Export-ADData -BackupPath $NewBackup.FullName
 }
 catch {
     Write-Host "AD not installed"
@@ -53,4 +55,4 @@ Write-Host "`n------------------------------------`n"
 
 Write-Host "Exporting generic baseline data..."
 . .\generic.ps1
-Export-GenericBaseline -BackupPath $BackupPath
+Export-GenericBaseline -BackupPath $NewBackup.FullName

@@ -159,6 +159,8 @@ def configure_bash():
 
 def configure_logging():
     LOGGING_IP = input("Enter the IP of the logging server:")
+    if (len(LOGGING_IP) < 3):
+        return
     cp.print_pass(f"Setting logging to go to {LOGGING_IP}")
     if os.path.exists("/etc/rsyslog.conf"):
         take_backup("/etc/rsyslog.conf")

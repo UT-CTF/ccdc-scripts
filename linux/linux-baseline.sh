@@ -6,6 +6,7 @@ baseline_dir="./baseline"
 # Function to create numbered directories
 create_numbered_directory() {
     mkdir -p "$baseline_dir"
+    chmod 600 "$baseline_dir"
     latest_dir=$(ls -1 "$baseline_dir" | sort -n | tail -n 1)
     if [[ -z $latest_dir ]]; then
         next_dir="1"

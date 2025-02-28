@@ -96,13 +96,15 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--password_file', default='passwords.txt', help='The file to write the new passwords to')
     parser.add_argument('-l', '--length', default=16, type=int, help='The length of the new passwords')
     parser.add_argument('-s', '--split', type=int, default=100, help='The number of users in each password file')
+    parser.add_argument('-m', '--manager', default='cn=Manager,dc=ccdc,dc=com', help='The manager DN')
+    parser.add_argument('-d', '--domain', default='dc=ccdc,dc=com', help='The domain to search for users')
     parser.add_argument('--execute', action='store_true', help='Use this flag to execute the ldif file')
     parser.add_argument('--passphrase', action='store_true', help='Use this flag to generate random passphrases instead of passwords')
     args = parser.parse_args()
     
-    manager_dn = 'cn=Manager,dc=ccdc,dc=com'
+    #manager_dn = 'cn=Manager,dc=ccdc,dc=com'
     manager_password = input("Manager password: ") # reading from stdin is probably more secure than storing plaintext in script or in command
-    domain = 'dc=ccdc,dc=com'
+    #domain = 'dc=ccdc,dc=com'
 
     password_changer = LDAPPasswordChanger(manager_dn, manager_password, domain)
     password_changer.change_all_passwords(args.ldif_file, args.password_file, args.length, passphrase=args.passphrase, split=args.split)
